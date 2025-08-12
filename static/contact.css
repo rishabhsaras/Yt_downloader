@@ -1,0 +1,94 @@
+/* General styling for the body */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #e2e3e4; /* A light, neutral background */
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+/* The main container for the content */
+.container {
+    padding: 20px;
+}
+
+/* The box holding the funny message */
+.message-box {
+    background-color: #ffffff;
+    padding: 40px 50px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    transform: rotate(-1deg); /* A slight, playful tilt */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.dark_message{
+    background-color: #1f262e;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+/* Add a hover effect to the message box */
+.message-box:hover {
+    transform: rotate(0deg);
+}
+
+/* Styling for the main heading */
+h1 {
+    font-family: 'Gochi Hand', cursive; /* The fun, handwritten font */
+    font-size: 3rem;
+    color: #417dbd;
+    margin-bottom: 20px;
+}
+
+/* Styling for the main paragraph text */
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* Styling for the smaller, secondary text */
+.small-text {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 30px;
+}
+.small_text_dark{
+    color: #9dadbe;
+}
+
+/* Styling for the "Go Back" button */
+.back-button {
+    display: inline-block;
+    background-color: #417dbd;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 50px; /* Make it a pill-shaped button */
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Add a hover effect to the button */
+.back-button:hover {
+    background-color: #346aa6;
+    transform: translateY(-2px); /* A slight lift on hover */
+}
+
+/* Make it responsive for smaller screens */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .message-box {
+        padding: 30px 25px;
+    }
+}
