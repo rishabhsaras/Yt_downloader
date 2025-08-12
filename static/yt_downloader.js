@@ -91,7 +91,7 @@ const displayQualityOptions = (formats, url, thumbnailUrl) => {
         listItem.onclick = () => {
             modal.remove();
             // Send the resolution to the download function
-            triggerFinalDownload(url, format.resolution);
+            triggerFinalDownload(url, format.format_id, format.resolution);
         };
         listItem.onmouseover = () => listItem.style.backgroundColor = '#f0f0f0';
         listItem.onmouseout = () => listItem.style.backgroundColor = 'transparent';
