@@ -99,25 +99,49 @@ def download_selected_format_route():
     try:
         data = request.get_json()
         url = data.get('url')
-        # --- FIX: Get the resolution from the request ---
+        format_id = data.get('format_id')
         resolution = data.get('resolution')
-        if not url or not resolution:
-            return jsonify({'error': 'URL and resolution are required.'}), 400
+
+        if not url:
+            return jsonify({'error': 'URL is required.'}), 400
 
         temp_dir = "temp_downloads"
         os.makedirs(temp_dir, exist_ok=True)
         output_template = os.path.join(temp_dir, '%(title)s.%(ext)s')
 
-        # --- FIX: Use a more robust format selector based on the chosen resolution ---
-        # This tells yt-dlp to find the best video up to the selected resolution and merge with the best audio.
+        # Decide format string
+        if format_id:
+            # Exact format download
+            print(f"Downloading exact format_id {format_id}...")
+            # First get info to check if the format already has audio
+            with yt_dlp.YoutubeDL({'quiet': True}) as ydl_tmp:
+                info_tmp = ydl_tmp.extract_info(url, download=False)
+                chosen_format = next((f for f in info_tmp.get('formats', []) if str(f.get('format_id')) == str(format_id)), None)
+            
+            if chosen_format and chosen_format.get('acodec') != 'none':
+                # Format already has audio, no merging
+                ydl_format = f"{format_id}"
+                merge_output_format = None
+            else:
+                # Video-only format, merge with best audio
+                ydl_format = f"{format_id}+bestaudio/best"
+                merge_output_format = 'mp4'
+        elif resolution:
+            # Fallback to resolution-based download
+            ydl_format = f"bestvideo[height<={resolution}]+bestaudio/best[height<={resolution}]"
+            merge_output_format = 'mp4'
+            print(f"Downloading best video up to {resolution}p...")
+        else:
+            return jsonify({'error': 'Either format_id or resolution is required.'}), 400
+
         ydl_opts = {
-            'format': f"bestvideo[height<={resolution}]+bestaudio/best[height<={resolution}]",
+            'format': ydl_format,
             'outtmpl': output_template,
-            'merge_output_format': 'mp4',
             'quiet': True,
         }
+        if merge_output_format:
+            ydl_opts['merge_output_format'] = merge_output_format
 
-        print(f"Downloading best video for resolution '{resolution}p' to server...")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             temp_filepath = ydl.prepare_filename(info)
